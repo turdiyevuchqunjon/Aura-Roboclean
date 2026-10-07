@@ -12,12 +12,16 @@ async function sendOne(chatId: string, text: string, buttons?: Button[]) {
     disable_web_page_preview: true,
   };
   if (buttons?.length) payload.reply_markup = { inline_keyboard: buttons.map((b) => [b]) };
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  return res.json().catch(() => ({ ok: false }));
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    return await res.json().catch(() => ({ ok: false }));
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
 }
 
 export async function sendTelegram(text: string, buttons?: Button[]) {

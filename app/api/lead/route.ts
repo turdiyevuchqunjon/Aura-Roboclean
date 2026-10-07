@@ -58,9 +58,15 @@ export async function POST(req: NextRequest) {
     url: sourceUrl.split("?")[0] || undefined,
     utm: utm || undefined,
   };
-  const token = signLead(payload);
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin).replace(/\/$/, "");
-  const payUrl = `${siteUrl}/pay/${id}?t=${token}`;
+  // ADMIN_SECRET yo'q bo'lsa ham lid yo'qolmasin — to'lov havolasiz yuboramiz
+  let payUrl = "";
+  try {
+    const token = signLead(payload);
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin).replace(/\/$/, "");
+    payUrl = `${siteUrl}/pay/${id}?t=${token}`;
+  } catch (e) {
+    console.error("[LEAD] to'lov havolasi yaratilmadi:", e);
+  }
 
   if (redis) {
     await redis.set(`lead:${id}`, { ...payload, status: "new" }, { ex: 60 * 60 * 24 * 180 }).catch(() => null);
@@ -76,13 +82,13 @@ export async function POST(req: NextRequest) {
     utm ? `🏷 <b>UTM:</b> ${esc(utm)}` : null,
     ``,
     `🕒 ${time}`,
-    ``,
-    `💳 <a href="${esc(payUrl)}">To'lovni kiritish</a>`,
+    payUrl ? `` : null,
+    payUrl ? `💳 <a href="${esc(payUrl)}">To'lovni kiritish</a>` : null,
   ];
   const text = lines.filter((l) => l !== null).join("\n");
 
   const [tgOk] = await Promise.all([
-    sendTelegram(text, [{ text: "💳 To'lov kiritish", url: payUrl }]),
+    sendTelegram(text, payUrl ? [{ text: "💳 To'lov kiritish", url: payUrl }] : undefined),
     sendCapiEvent({
       eventName: "Lead",
       eventId,
