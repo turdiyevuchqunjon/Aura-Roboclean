@@ -123,7 +123,7 @@ export default function LeadForm({ compact = false }: { compact?: boolean }) {
       />
       {error ? <p className="form-error">{error}</p> : null}
       <button className="btn btn-primary btn-block" disabled={state === "loading"}>
-        {state === "loading" ? "Yuborilmoqda..." : "Bepul demonstratsiyaga yozilish"}
+        {state === "loading" ? "Yuborilmoqda..." : "Bepul konsultatsiya olish"}
       </button>
       <p className="form-note">🔒 Ma'lumotlaringiz faqat siz bilan bog'lanish uchun ishlatiladi</p>
     </form>

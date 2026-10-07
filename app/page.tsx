@@ -71,7 +71,7 @@ export default function Home() {
                 <li><span>✓</span> Uyingizda bepul demonstratsiya</li>
               </ul>
               <div className="hero-cta">
-                <a href="#ariza" className="btn btn-primary">Bepul demonstratsiya</a>
+                <a href="#ariza" className="btn btn-primary">Bepul konsultatsiya olish</a>
                 <a href={`tel:${site.phone}`} className="btn btn-ghost">Qo'ng'iroq qilish</a>
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function Home() {
 
       <div className="sticky-cta">
         <a href={`tel:${site.phone}`} className="btn btn-ghost">📞</a>
-        <a href="#ariza" className="btn btn-primary">Bepul demonstratsiya</a>
+        <a href="#ariza" className="btn btn-primary">Bepul konsultatsiya olish</a>
       </div>
     </>
   );
